@@ -43,3 +43,21 @@ while(minesToPlace > 0){
         minesToPlace--;
     }
 }
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - SET NUMBERS MINES AROUND
+// ==============================================================
+
+for(let i = 0; i < cells.length; i++){
+    if(!cells[i].classList.contains("mine")){
+        let minesAround = 0;
+        let cellsAround = [i-25, i-24, i-23, i-1, i+1, i+23, i+24, i+25];
+        for(let j=0; j<cellsAround.length; j++){
+            if(cells[cellsAround[j]] != undefined && cells[cellsAround[j]].classList.contains("mine")){
+                minesAround++;
+            }
+        }
+        cells[i].classList.add("minesAround-"+minesAround.toString());
+    }
+}
+
