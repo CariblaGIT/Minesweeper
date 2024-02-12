@@ -59,6 +59,10 @@ body{
 .cell{
     height: 1.65em;
     width: 3em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
 }
 
 /* Classes for making checkboard appearance */
@@ -81,4 +85,46 @@ body{
 .greenCell:hover{
     background-color: #9ee23e;
     cursor: pointer;
+}
+
+.clickedCellGreen{
+    background-color: #D7B899;
+    cursor: pointer;
+}
+
+.clickedCellLightGreen{
+    background-color: #E5C29F;
+    cursor: pointer;
+}
+
+.minesAround1{
+    color: blue;
+}
+
+.minesAround2{
+    color: green;
+}
+
+.minesAround3{
+    color: red;
+}
+
+.minesAround4{
+    color: darkblue;
+}
+
+.minesAround5{
+    color: brown;
+}
+
+.minesAround6{
+    color: cyan;
+}
+
+.minesAround7{
+    color: black;
+}
+
+.minesAround8{
+    color: grey;
 }
