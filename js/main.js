@@ -30,6 +30,16 @@ for (let i = 0; i < 20; i++) {
 field.appendChild(ChessTable);
 
 // ==============================================================
-// FUNCTIONALITIES OF THE MINESWEEPER
+// FUNCTIONALITIES OF THE MINESWEEPER - SET MINES
 // ==============================================================
 
+let minesToPlace = 99;
+const cells = document.getElementsByClassName("cell")
+
+while(minesToPlace > 0){
+    let randCell = Math.floor(Math.random() * 480);
+    if(!cells[randCell].classList.contains("mine")){
+        cells[randCell].classList.add("mine");
+        minesToPlace--;
+    }
+}

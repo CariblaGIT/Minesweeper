@@ -64,8 +64,21 @@ body{
 /* Classes for making checkboard appearance */
 .lightGreenCell{
     background-color: #A7D948;
+    cursor: pointer;
 }
 
 .greenCell{
     background-color: #8ECC39;
+    cursor: pointer;
+}
+
+/* Classes for making checkboard appearance - Interactive */
+.lightGreenCell:hover{
+    background-color: #b9f34f;
+    cursor: pointer;
+}
+
+.greenCell:hover{
+    background-color: #9ee23e;
+    cursor: pointer;
 }
