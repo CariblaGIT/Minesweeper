@@ -54,28 +54,28 @@ const FlippingCells = (cell) => {
     cellClicked.style.pointerEvents = "none";
 }
 
-const FlipCellsAroundEqualToZero = (cell) => {
+const FlipCellsAroundEqualToZero = (cell, cellList) => {
     let cellID = document.getElementById(cell);
-    let arrCellsToCheck = []
-    for(let i = 0; i < cells.length; i++){
-        if(cells[i].id == cellID.id){
+    let arrCellsToCheck = [];
+    for(let i = 0; i < cellList.length; i++){
+        if(cellList[i].id == cellID.id){
             let cellsAround = GetListCellsAround(i);
             for(let j = 0; j <= cellsAround.length; j++){
-                if(cells[cellsAround[j]] != undefined && !zeroCellsChecked.includes(cells[cellsAround[j]].id)){
-                    if(cells[cellsAround[j]].classList.contains("minesAround-0")){
-                        FlippingCells(cells[cellsAround[j]].id);
-                        arrCellsToCheck.push(cells[cellsAround[j]].id);
-                    } else if(/minesAround-/.test(cells[cellsAround[j]].classList)){
-                        FlippingCells(cells[cellsAround[j]].id);
+                if(cellList[cellsAround[j]] != undefined && !zeroCellsChecked.includes(cellList[cellsAround[j]].id)){
+                    if(cellList[cellsAround[j]].classList.contains("minesAround-0")){
+                        FlippingCells(cellList[cellsAround[j]].id);
+                        arrCellsToCheck.push(cellList[cellsAround[j]].id);
+                    } else if(/minesAround-/.test(cellList[cellsAround[j]].classList)){
+                        FlippingCells(cellList[cellsAround[j]].id);
                     }
                 }
             }
-            zeroCellsChecked.push(cells[i].id);
+            zeroCellsChecked.push(cellList[i].id);
         }
     }
     if(arrCellsToCheck.length >= 1){
         for(let k = 0; k < arrCellsToCheck.length; k++){
-            FlipCellsAroundEqualToZero(arrCellsToCheck[k]);
+            FlipCellsAroundEqualToZero(arrCellsToCheck[k], cellList);
         }
     }
 }
@@ -84,7 +84,7 @@ const FlipCellsAroundEqualToZero = (cell) => {
 // FUNCTIONALITIES OF THE MINESWEEPER - LOST GAME
 // ==============================================================
 
-const LostGame = (mineClickedID) => {
+const LostGame = (mineClickedID, arrayCells) => {
     let listMines = [];
     arrayCells.forEach(item => {
         if(item.classList.contains("mine")){
@@ -100,52 +100,54 @@ const LostGame = (mineClickedID) => {
         listMines[randomPos].innerHTML = '<i class="bi bi-crosshair"></i>';
         listMines.splice(randomPos, 1);
     }
+
+    const divReset = document.getElementById("restartGame");
+    divReset.style.display = "flex";
 }
 
 // ==============================================================
 // GENERATION OF MINESWEEPER FIELD INSIDE THE CONTAINER
 // ==============================================================
 
-const field = document.getElementById("field");
+const CreateBoard = (field) => {
+    // Create a table element 
+    let ChessTable = document.createElement('div'); 
+    ChessTable.setAttribute('id', 'tableField');
+    for (let i = 0; i < 20; i++) { 
+        let row = document.createElement('div'); 
+        row.setAttribute('id', 'tableRow');
 
-// Create a table element 
-let ChessTable = document.createElement('div'); 
-ChessTable.setAttribute('id', 'tableField');
-for (let i = 0; i < 20; i++) { 
-    let row = document.createElement('div'); 
-    row.setAttribute('id', 'tableRow');
+        for (let j = 0; j < 24; j++) { 
+            // Create a cell 
+            let cell = document.createElement('div');
+            cell.setAttribute('id', 'cell_'+(([i,j]).toString()));
 
-    for (let j = 0; j < 24; j++) { 
-        // Create a cell 
-        let cell = document.createElement('div');
-        cell.setAttribute('id', 'cell_'+(([i,j]).toString()));
-
-        if ((i + j) % 2 == 0) { 
-            cell.setAttribute('class', 'cell lightGreenCell'); 
-            row.appendChild(cell); 
-        } else { 
-            cell.setAttribute('class', 'cell greenCell'); 
-            row.appendChild(cell); 
+            if ((i + j) % 2 == 0) { 
+                cell.setAttribute('class', 'cell lightGreenCell'); 
+                row.appendChild(cell); 
+            } else { 
+                cell.setAttribute('class', 'cell greenCell'); 
+                row.appendChild(cell); 
+            } 
         } 
-    } 
 
-    ChessTable.appendChild(row); 
+        ChessTable.appendChild(row); 
+    }
+
+    field.appendChild(ChessTable);
 }
-
-field.appendChild(ChessTable);
 
 // ==============================================================
 // FUNCTIONALITIES OF THE MINESWEEPER - SET MINES
 // ==============================================================
 
-let minesToPlace = 99;
-const cells = document.getElementsByClassName("cell")
-
-while(minesToPlace > 0){
-    let randCell = Math.floor(Math.random() * 480);
-    if(!cells[randCell].classList.contains("mine")){
-        cells[randCell].classList.add("mine");
-        minesToPlace--;
+const SetMinesIntoField = (minesToPlace, cellList) => {
+    while(minesToPlace > 0){
+        let randCell = Math.floor(Math.random() * 480);
+        if(!cellList[randCell].classList.contains("mine")){
+            cellList[randCell].classList.add("mine");
+            minesToPlace--;
+        }
     }
 }
 
@@ -153,55 +155,98 @@ while(minesToPlace > 0){
 // FUNCTIONALITIES OF THE MINESWEEPER - SET NUMBERS MINES AROUND
 // ==============================================================
 
-for(let i = 0; i < cells.length; i++){
-    if(!cells[i].classList.contains("mine")){
-        let minesAround = 0;
-        let cellsAround = GetListCellsAround(i);
-        for(let j=0; j<cellsAround.length; j++){
-            if(cells[cellsAround[j]].classList.contains("mine")){
-                minesAround++;
+const SetClasesIntoCells = (cellList) => {
+    for(let i = 0; i < cellList.length; i++){
+        if(!cellList[i].classList.contains("mine")){
+            let minesAround = 0;
+            let cellsAround = GetListCellsAround(i);
+            for(let j=0; j<cellsAround.length; j++){
+                if(cellList[cellsAround[j]].classList.contains("mine")){
+                    minesAround++;
+                }
             }
+            cellList[i].classList.add("minesAround-"+minesAround.toString());
         }
-        cells[i].classList.add("minesAround-"+minesAround.toString());
     }
+}
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - RESET MAP
+// ==============================================================
+
+const NewFieldGenerator = () => {
+    const field = document.getElementById("field");
+
+    CreateBoard(field);
+
+    let minesToPlace = 99;
+    const cells = document.getElementsByClassName("cell");
+
+    SetMinesIntoField(minesToPlace, cells)
+    SetClasesIntoCells(cells);
+    SetClickerEventsIntoCells(cells);
 }
 
 // ==============================================================
 // FUNCTIONALITIES OF THE MINESWEEPER - SET CLICKERS FOR EACH CELL
 // ==============================================================
 
-const arrayCells = Array.from(cells);
+const SetClickerEventsIntoCells = (cellList) => {
+    const arrayCells = Array.from(cellList);
 
-arrayCells.forEach(item => {
-    item.addEventListener("mousedown", (e) => {
-        switch(e.button){
-            case 0:
-                if(e.target.innerHTML === ''){
-                    let classes = Array.from(e.target.classList);
-                    let numMines;
-                    for(let i=0; i<classes.length; i++){
-                        (classes[i].includes("minesAround-")) ? numMines = parseInt(classes[i].slice(-1)) : numMines = "mine";
-                    }
-                    switch(numMines){
-                        case "mine":
-                            LostGame(e.target.id);
+    arrayCells.forEach(item => {
+        item.addEventListener("mousedown", (e) => {
+            switch(e.button){
+                case 0:
+                    if(e.target.innerHTML === ''){
+                        let classes = Array.from(e.target.classList);
+                        let numMines;
+                        for(let i=0; i<classes.length; i++){
+                            (classes[i].includes("minesAround-")) ? numMines = parseInt(classes[i].slice(-1)) : numMines = "mine";
+                        }
+                        switch(numMines){
+                            case "mine":
+                                LostGame(e.target.id, arrayCells);
+                                break;
+                            default:
+                                FlippingCells(e.target.id);
+                                if(numMines == 0){
+                                    FlipCellsAroundEqualToZero(e.target.id, cellList)
+                                }
+                                //WinGame();
                             break;
-                        default:
-                            FlippingCells(e.target.id);
-                            if(numMines == 0){
-                                FlipCellsAroundEqualToZero(e.target.id)
-                            }
-                        break;
+                        }
                     }
-                }
-                break;
-            case 2:
-                if(!e.target.innerHTML){
-                    e.target.innerHTML='<i class="bi bi-flag-fill"></i>';
-                } else {
-                    e.target.innerHTML='';
-                }
-                break;
-        }
+                    break;
+                case 2:
+                    if(!e.target.innerHTML){
+                        e.target.innerHTML='<i class="bi bi-flag-fill"></i>';
+                    } else {
+                        e.target.innerHTML='';
+                    }
+                    break;
+            }
+        })
     })
+}
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - RESET BUTTON
+// ==============================================================
+
+const resetButton = document.getElementById("buttonRestart");
+
+resetButton.addEventListener("click", (e) => {
+    const field = document.getElementById("field");
+    field.removeChild(document.getElementById("tableField"));
+    const divReset = document.getElementById("restartGame");
+    divReset.style.display = "none";
+
+    NewFieldGenerator();
 })
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - MAIN
+// ==============================================================
+
+NewFieldGenerator();
