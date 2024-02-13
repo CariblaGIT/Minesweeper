@@ -1,5 +1,41 @@
+let zeroCellsChecked = [];
+
+let GetListCellsAround = (index) => {
+    let cellsAround;
+
+    if(index == 0){
+        cellsAround = [index+1, index+24, index+25];
+    } else if (index == 23){
+        cellsAround = [index-1, index+23, index+24];
+    } else if (index == 456){
+        cellsAround = [index-24, index-23, index+1];
+    } else if (index == 479){
+        cellsAround = [index-25, index-24, index-1];
+    } else if (index > 0 && index < 23){
+        cellsAround = [index-1, index+1, index+23, index+24, index+25];
+    } else if (index > 456 && index < 479){
+        cellsAround = [index-25, index-24, index-23, index-1, index+1];
+    } else if (index > 0 && index % 24 == 0 && index < 456){
+        cellsAround = [index-24, index-23, index+1, index+24, index+25];
+    } else if (index > 23 && index % 24 == 23 && index < 479){
+        cellsAround = [index-25, index-24, index-1, index+23, index+24];
+    } else {
+        cellsAround = [index-25, index-24, index-23, index-1, index+1, index+23, index+24, index+25];
+    }
+
+    return cellsAround;
+}
+
 const FlippingCells = (cell) => {
     const cellClicked = document.getElementById(cell);
+    let classListCell = cellClicked.classList;
+    for(let i = 0; i < classListCell.length; i++){
+        if(parseInt(classListCell[i].slice(-1)) && parseInt(classListCell[i].slice(-1)) > 0){
+            let num = classListCell[i].slice(-1);
+            classListCell.add("minesAround"+num);
+            cellClicked.innerHTML = num;
+        }
+    }
     for(let i = 0; i < cellClicked.classList.length; i++){
         if(cellClicked.classList[i].match("lightGreenCell")){
             cellClicked.classList.remove("lightGreenCell")
@@ -11,7 +47,33 @@ const FlippingCells = (cell) => {
         
     }
     
-} 
+}
+
+const FlipCellsAroundEqualToZero = (cell) => {
+    let cellID = document.getElementById(cell);
+    let arrCellsToCheck = []
+    for(let i = 0; i < cells.length; i++){
+        if(cells[i].id == cellID.id){
+            let cellsAround = GetListCellsAround(i);
+            for(let j = 0; j <= cellsAround.length; j++){
+                if(cells[cellsAround[j]] != undefined && !zeroCellsChecked.includes(cells[cellsAround[j]].id)){
+                    if(cells[cellsAround[j]].classList.contains("minesAround-0")){
+                        FlippingCells(cells[cellsAround[j]].id);
+                        arrCellsToCheck.push(cells[cellsAround[j]].id);
+                    } else if(/minesAround-/.test(cells[cellsAround[j]].classList)){
+                        FlippingCells(cells[cellsAround[j]].id);
+                    }
+                }
+            }
+            zeroCellsChecked.push(cells[i].id);
+        }
+    }
+    if(arrCellsToCheck.length >= 1){
+        for(let k = 0; k < arrCellsToCheck.length; k++){
+            FlipCellsAroundEqualToZero(arrCellsToCheck[k]);
+        }
+    }
+}
 
 // ==============================================================
 // GENERATION OF MINESWEEPER FIELD INSIDE THE CONTAINER
@@ -67,27 +129,7 @@ while(minesToPlace > 0){
 for(let i = 0; i < cells.length; i++){
     if(!cells[i].classList.contains("mine")){
         let minesAround = 0;
-        let cellsAround;
-
-        if(i == 0){
-            cellsAround = [i+1, i+24, i+25];
-        } else if (i == 23){
-            cellsAround = [i-1, i+23, i+24];
-        } else if (i == 456){
-            cellsAround = [i-24, i-23, i+1];
-        } else if (i == 479){
-            cellsAround = [i-25, i-24, i-1];
-        } else if (i > 0 && i < 23){
-            cellsAround = [i-1, i+1, i+23, i+24, i+25];
-        } else if (i > 456 && i < 479){
-            cellsAround = [i-25, i-24, i-23, i-1, i+1];
-        } else if (i > 0 && i % 24 == 0 && i < 456){
-            cellsAround = [i-24, i-23, i+1, i+24, i+25];
-        } else if (i > 23 && i % 24 == 23 && i < 479){
-            cellsAround = [i-25, i-24, i-1, i+23, i+24];
-        } else {
-            cellsAround = [i-25, i-24, i-23, i-1, i+1, i+23, i+24, i+25];
-        }
+        let cellsAround = GetListCellsAround(i);
         for(let j=0; j<cellsAround.length; j++){
             if(cells[cellsAround[j]].classList.contains("mine")){
                 minesAround++;
@@ -117,8 +159,8 @@ arrayCells.forEach(item => {
             default:
                 FlippingCells(e.target.id);
                 e.target.classList.add("minesAround"+numMines);
-                if(numMines != 0){
-                    e.target.innerHTML = numMines;
+                if(numMines == 0){
+                    FlipCellsAroundEqualToZero(e.target.id)
                 }
                 break;
         }
