@@ -46,7 +46,7 @@ const FlippingCells = (cell) => {
         }
         
     }
-    
+    cellClicked.style.pointerEvents = "none";
 }
 
 const FlipCellsAroundEqualToZero = (cell) => {
@@ -146,21 +146,33 @@ for(let i = 0; i < cells.length; i++){
 const arrayCells = Array.from(cells);
 
 arrayCells.forEach(item => {
-    item.addEventListener("click", (e) => {
-        let classes = Array.from(e.target.classList);
-        let numMines;
-        for(let i=0; i<classes.length; i++){
-            (classes[i].includes("minesAround-")) ? numMines = parseInt(classes[i].slice(-1)) : numMines = "mine";
-        }
-        switch(numMines){
-            case "mine":
-                //TODO: GameOver interaction goes right here
+    item.addEventListener("mousedown", (e) => {
+        switch(e.button){
+            case 0:
+                if(e.target.innerHTML === ''){
+                    let classes = Array.from(e.target.classList);
+                    let numMines;
+                    for(let i=0; i<classes.length; i++){
+                        (classes[i].includes("minesAround-")) ? numMines = parseInt(classes[i].slice(-1)) : numMines = "mine";
+                    }
+                    switch(numMines){
+                        case "mine":
+                            //TODO: GameOver interaction goes right here
+                            break;
+                        default:
+                            FlippingCells(e.target.id);
+                            if(numMines == 0){
+                                FlipCellsAroundEqualToZero(e.target.id)
+                            }
+                        break;
+                    }
+                }
                 break;
-            default:
-                FlippingCells(e.target.id);
-                e.target.classList.add("minesAround"+numMines);
-                if(numMines == 0){
-                    FlipCellsAroundEqualToZero(e.target.id)
+            case 2:
+                if(!e.target.innerHTML){
+                    e.target.innerHTML='<i class="bi bi-flag-fill"></i>';
+                } else {
+                    e.target.innerHTML='';
                 }
                 break;
         }
