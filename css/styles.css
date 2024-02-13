@@ -72,6 +72,9 @@ body{
     height: 10vh;
     width: 60vw;
     background-color: rgb(36, 71, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Field container and field generated on JS */

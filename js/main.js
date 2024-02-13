@@ -100,7 +100,7 @@ const LostGame = (mineClickedID, arrayCells) => {
     }
 
     const lostGameTitle = document.getElementById("lostWinTitle");
-    lostGameTitle.innerHTML = "YOU LOST :("
+    lostGameTitle.innerHTML = '<img src="./img/loose.png">'
     const divReset = document.getElementById("restartGame");
     divReset.style.display = "flex";
 }
@@ -119,7 +119,7 @@ const CheckWinGame = () => {
     }
     if(counterCellsFliped == 380){
         const winGameTitle = document.getElementById("lostWinTitle");
-        winGameTitle.innerHTML = "YOU LOST :("
+        winGameTitle.innerHTML = '<img src="./img/win.png">'
         const divReset = document.getElementById("restartGame");
         divReset.style.display = "flex";
     }
