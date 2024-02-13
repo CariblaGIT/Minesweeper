@@ -1,3 +1,8 @@
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - FLIPPING CELLS
+// ==============================================================
+
 let zeroCellsChecked = [];
 
 let GetListCellsAround = (index) => {
@@ -72,6 +77,28 @@ const FlipCellsAroundEqualToZero = (cell) => {
         for(let k = 0; k < arrCellsToCheck.length; k++){
             FlipCellsAroundEqualToZero(arrCellsToCheck[k]);
         }
+    }
+}
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - LOST GAME
+// ==============================================================
+
+const LostGame = (mineClickedID) => {
+    let listMines = [];
+    arrayCells.forEach(item => {
+        if(item.classList.contains("mine")){
+            (mineClickedID == item.id) ? listMines.unshift(item) : listMines.push(item);
+        }
+    })
+    //First mine clicked
+    listMines[0].innerHTML = '<i class="bi bi-crosshair"></i>';
+    listMines.shift();
+
+    while(listMines.length > 0){
+        let randomPos = Math.floor(Math.random() * listMines.length);
+        listMines[randomPos].innerHTML = '<i class="bi bi-crosshair"></i>';
+        listMines.splice(randomPos, 1);
     }
 }
 
@@ -157,7 +184,7 @@ arrayCells.forEach(item => {
                     }
                     switch(numMines){
                         case "mine":
-                            //TODO: GameOver interaction goes right here
+                            LostGame(e.target.id);
                             break;
                         default:
                             FlippingCells(e.target.id);

@@ -98,13 +98,20 @@ body{
 }
 
 .bi{
-    color: white;
     height: 1.5em;
     width: 1.5em;
     display: flex;
     justify-content: center;
     align-items: center;
     pointer-events: none;
+}
+
+.bi-crosshair{
+    color:black;
+}
+
+.bi-flag-fill{
+    color: white;
 }
 
 .minesAround1{
