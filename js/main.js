@@ -3,8 +3,6 @@
 // FUNCTIONALITIES OF THE MINESWEEPER - FLIPPING CELLS
 // ==============================================================
 
-let zeroCellsChecked = [];
-
 let GetListCellsAround = (index) => {
     let cellsAround;
 
@@ -101,8 +99,30 @@ const LostGame = (mineClickedID, arrayCells) => {
         listMines.splice(randomPos, 1);
     }
 
+    const lostGameTitle = document.getElementById("lostWinTitle");
+    lostGameTitle.innerHTML = "YOU LOST :("
     const divReset = document.getElementById("restartGame");
     divReset.style.display = "flex";
+}
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - WIN GAME
+// ==============================================================
+
+const CheckWinGame = () => {
+    const cells = document.getElementsByClassName("cell");
+    let counterCellsFliped = 0;
+    for(let i = 0; i < cells.length; i++){
+        if(/clickedCell/.test(cells[i].classList)){
+            counterCellsFliped++;
+        }
+    }
+    if(counterCellsFliped == 380){
+        const winGameTitle = document.getElementById("lostWinTitle");
+        winGameTitle.innerHTML = "YOU LOST :("
+        const divReset = document.getElementById("restartGame");
+        divReset.style.display = "flex";
+    }
 }
 
 // ==============================================================
@@ -181,6 +201,7 @@ const NewFieldGenerator = () => {
 
     let minesToPlace = 99;
     const cells = document.getElementsByClassName("cell");
+    zeroCellsChecked = [];
 
     SetMinesIntoField(minesToPlace, cells)
     SetClasesIntoCells(cells);
@@ -213,7 +234,7 @@ const SetClickerEventsIntoCells = (cellList) => {
                                 if(numMines == 0){
                                     FlipCellsAroundEqualToZero(e.target.id, cellList)
                                 }
-                                //WinGame();
+                                CheckWinGame();
                             break;
                         }
                     }
@@ -249,4 +270,5 @@ resetButton.addEventListener("click", (e) => {
 // FUNCTIONALITIES OF THE MINESWEEPER - MAIN
 // ==============================================================
 
+let zeroCellsChecked = [];
 NewFieldGenerator();
