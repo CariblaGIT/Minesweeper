@@ -102,15 +102,11 @@ const LostGame = (mineClickedID, arrayCells) => {
         if (index < 98) {
             const randomPos = Math.floor(Math.random() * listMines.length);
             // Block click events
-            document.addEventListener('click', blockClicks, true);
+            document.addEventListener('mousedown', blockClicks, true);
             setTimeout(() => {
                 ShowMineIcon(listMines[randomPos]);
                 listMines.splice(randomPos, 1);
                 showNextMine(); // Call the function recursively for the next mine
-                // Unblock click events after the function completes its execution
-                if (index === listMines.length - 1) {
-                    document.removeEventListener('click', blockClicks, true);
-                }
             }, 100);
             index++;
         } else {
@@ -120,7 +116,7 @@ const LostGame = (mineClickedID, arrayCells) => {
             const divReset = document.getElementById("restartGame");
             divReset.style.display = "flex";
 
-            document.removeEventListener('click', blockClicks, true);
+            document.removeEventListener('mousedown', blockClicks, true);
         }
     }
 
