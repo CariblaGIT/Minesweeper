@@ -93,17 +93,46 @@ const LostGame = (mineClickedID, arrayCells) => {
     listMines[0].innerHTML = '<i class="bi bi-crosshair"></i>';
     listMines.shift();
 
-    while(listMines.length > 0){
-        let randomPos = Math.floor(Math.random() * listMines.length);
-        listMines[randomPos].innerHTML = '<i class="bi bi-crosshair"></i>';
-        listMines.splice(randomPos, 1);
+    const ShowMineIcon = (cell) => {
+        cell.innerHTML = '<i class="bi bi-crosshair"></i>';
     }
 
-    const lostGameTitle = document.getElementById("lostWinTitle");
-    lostGameTitle.innerHTML = '<img src="./img/loose.png">'
-    const divReset = document.getElementById("restartGame");
-    divReset.style.display = "flex";
+    let index = 0;
+    const showNextMine = () => {
+        if (index < 98) {
+            const randomPos = Math.floor(Math.random() * listMines.length);
+            // Block click events
+            document.addEventListener('click', blockClicks, true);
+            setTimeout(() => {
+                ShowMineIcon(listMines[randomPos]);
+                listMines.splice(randomPos, 1);
+                showNextMine(); // Call the function recursively for the next mine
+                // Unblock click events after the function completes its execution
+                if (index === listMines.length - 1) {
+                    document.removeEventListener('click', blockClicks, true);
+                }
+            }, 100);
+            index++;
+        } else {
+            // Handle the end of the loop here if needed
+            const lostGameTitle = document.getElementById("lostWinTitle");
+            lostGameTitle.innerHTML = '<img src="./img/loose.png">';
+            const divReset = document.getElementById("restartGame");
+            divReset.style.display = "flex";
+
+            document.removeEventListener('click', blockClicks, true);
+        }
+    }
+
+    // Event handler to block clicks
+    function blockClicks(event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    showNextMine(); // Start the loop
 }
+
 
 // ==============================================================
 // FUNCTIONALITIES OF THE MINESWEEPER - WIN GAME
@@ -262,6 +291,8 @@ resetButton.addEventListener("click", (e) => {
     field.removeChild(document.getElementById("tableField"));
     const divReset = document.getElementById("restartGame");
     divReset.style.display = "none";
+    const lostWinGameTitle = document.getElementById("lostWinTitle");
+    lostWinGameTitle.innerHTML = ''
 
     NewFieldGenerator();
 })
