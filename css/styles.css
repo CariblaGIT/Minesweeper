@@ -91,7 +91,7 @@ body{
 /* Row of the field */
 #tableRow{
     width: 60vw;
-    height: 1.65em;
+    height: 4vh;
 
     display: flex;
     flex-direction: row;
@@ -101,8 +101,8 @@ body{
 
 /* Cell board sizes */
 .cell{
-    height: 1.65em;
-    width: 3em;
+    height: 3.5vh;
+    width: 3vw;
     display: flex;
     justify-content: center;
     align-items: center;
