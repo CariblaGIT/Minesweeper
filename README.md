@@ -22,8 +22,9 @@
 ## Key Features
 
 * Minigame inspired on the classical minesweeper minigame
-* Right click to set flags preventing to click into mines
+* Right click to set flags preventing to click into mines, and a counter to controll the flags respect the total mines amount
 * Regenerated field with restart and reboot of page
+* Timer to know how much time you spend in a game
 
 ## Demo
 
@@ -48,7 +49,7 @@ You can try the [demo](https://cariblagit.github.io/Minesweeper/) the latest ver
 <br>
 ⬜ Better animations to win and loose
 <br>
-⬜ Highscore and timer implementation
+✅ Timer and flags counter implementation
 <br>
 ⬜ Pallette selector for changing default colors
 
@@ -56,7 +57,7 @@ You can try the [demo](https://cariblagit.github.io/Minesweeper/) the latest ver
 
 Example ingame - All cells
 
-<img src="./img/thirdTest.png">
+<img src="./img/fourthTest.png">
 
 ## Support
 
