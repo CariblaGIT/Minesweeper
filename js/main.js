@@ -104,6 +104,8 @@ const LostGame = (mineClickedID, arrayCells) => {
             // Block click events
             document.addEventListener('mousedown', blockClicks, true);
             setTimeout(() => {
+                const mineAudioPlayer = document.getElementById("audioBombs");
+                mineAudioPlayer.play();
                 ShowMineIcon(listMines[randomPos]);
                 listMines.splice(randomPos, 1);
                 showNextMine(); // Call the function recursively for the next mine
