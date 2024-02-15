@@ -79,6 +79,16 @@ body{
     align-items: center;
 }
 
+#options{
+    height: 10vh;
+    width: 60vw;
+    margin-bottom: 1em;;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
 /* Logo header field */
 #logoImgHeader{
     height: auto;

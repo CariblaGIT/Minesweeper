@@ -3,27 +3,27 @@
 // FUNCTIONALITIES OF THE MINESWEEPER - FLIPPING CELLS
 // ==============================================================
 
-let GetListCellsAround = (index) => {
+let GetListCellsAround = (index, rows, columns) => {
     let cellsAround;
 
     if(index == 0){
-        cellsAround = [index+1, index+24, index+25];
-    } else if (index == 23){
-        cellsAround = [index-1, index+23, index+24];
-    } else if (index == 456){
-        cellsAround = [index-24, index-23, index+1];
-    } else if (index == 479){
-        cellsAround = [index-25, index-24, index-1];
-    } else if (index > 0 && index < 23){
-        cellsAround = [index-1, index+1, index+23, index+24, index+25];
-    } else if (index > 456 && index < 479){
-        cellsAround = [index-25, index-24, index-23, index-1, index+1];
-    } else if (index > 0 && index % 24 == 0 && index < 456){
-        cellsAround = [index-24, index-23, index+1, index+24, index+25];
-    } else if (index > 23 && index % 24 == 23 && index < 479){
-        cellsAround = [index-25, index-24, index-1, index+23, index+24];
+        cellsAround = [index+1, index+columns, index+columns+1];
+    } else if (index == columns-1){
+        cellsAround = [index-1, index+columns-1, index+columns];
+    } else if (index == rows*columns-columns){
+        cellsAround = [index-columns, index-columns-1, index+1];
+    } else if (index == rows*columns-1){
+        cellsAround = [index-columns-1, index-columns, index-1];
+    } else if (index > 0 && index < columns-1){
+        cellsAround = [index-1, index+1, index+columns-1, index+columns, index+columns+1];
+    } else if (index > rows*columns-columns && index < rows*columns-1){
+        cellsAround = [index-columns-1, index-columns, index-columns+1, index-1, index+1];
+    } else if (index > 0 && index % columns == 0 && index < rows*columns-columns){
+        cellsAround = [index-columns, index-columns+1, index+1, index+columns, index+columns+1];
+    } else if (index > columns-1 && index % columns == columns-1 && index < rows*columns-1){
+        cellsAround = [index-columns-1, index-columns, index-1, index+columns-1, index+columns];
     } else {
-        cellsAround = [index-25, index-24, index-23, index-1, index+1, index+23, index+24, index+25];
+        cellsAround = [index-columns-1, index-columns, index-columns+1, index-1, index+1, index+columns-1, index+columns, index+columns+1];
     }
 
     return cellsAround;
@@ -53,11 +53,27 @@ const FlippingCells = (cell) => {
 }
 
 const FlipCellsAroundEqualToZero = (cell, cellList) => {
+    let rows;
+    let columns;
+    switch(cellList.length){
+        case 480:
+            rows = 20;
+            columns = 24;
+            break;
+        case 252:
+            rows = 14;
+            columns = 18;
+            break;
+        case 80:
+            rows = 8;
+            columns = 10;
+            break;
+    }
     let cellID = document.getElementById(cell);
     let arrCellsToCheck = [];
     for(let i = 0; i < cellList.length; i++){
         if(cellList[i].id == cellID.id){
-            let cellsAround = GetListCellsAround(i);
+            let cellsAround = GetListCellsAround(i, rows, columns);
             for(let j = 0; j <= cellsAround.length; j++){
                 if(cellList[cellsAround[j]] != undefined && !zeroCellsChecked.includes(cellList[cellsAround[j]].id)){
                     if(cellList[cellsAround[j]].classList.contains("minesAround-0")){
@@ -99,7 +115,7 @@ const LostGame = (mineClickedID, arrayCells) => {
 
     let index = 0;
     const showNextMine = () => {
-        if (index < 98) {
+        if (index < listMines.length-1) {
             const randomPos = Math.floor(Math.random() * listMines.length);
             // Block click events
             document.addEventListener('mousedown', blockClicks, true);
@@ -157,15 +173,15 @@ const CheckWinGame = () => {
 // GENERATION OF MINESWEEPER FIELD INSIDE THE CONTAINER
 // ==============================================================
 
-const CreateBoard = (field) => {
+const CreateBoard = (field, rows, columns) => {
     // Create a table element 
     let ChessTable = document.createElement('div'); 
     ChessTable.setAttribute('id', 'tableField');
-    for (let i = 0; i < 20; i++) { 
+    for (let i = 0; i < rows; i++) { 
         let row = document.createElement('div'); 
         row.setAttribute('id', 'tableRow');
 
-        for (let j = 0; j < 24; j++) { 
+        for (let j = 0; j < columns; j++) { 
             // Create a cell 
             let cell = document.createElement('div');
             cell.setAttribute('id', 'cell_'+(([i,j]).toString()));
@@ -189,9 +205,9 @@ const CreateBoard = (field) => {
 // FUNCTIONALITIES OF THE MINESWEEPER - SET MINES
 // ==============================================================
 
-const SetMinesIntoField = (minesToPlace, cellList) => {
+const SetMinesIntoField = (minesToPlace, cellList, totalCells) => {
     while(minesToPlace > 0){
-        let randCell = Math.floor(Math.random() * 480);
+        let randCell = Math.floor(Math.random() * totalCells);
         if(!cellList[randCell].classList.contains("mine")){
             cellList[randCell].classList.add("mine");
             minesToPlace--;
@@ -203,11 +219,11 @@ const SetMinesIntoField = (minesToPlace, cellList) => {
 // FUNCTIONALITIES OF THE MINESWEEPER - SET NUMBERS MINES AROUND
 // ==============================================================
 
-const SetClasesIntoCells = (cellList) => {
+const SetClasesIntoCells = (cellList, rows, columns) => {
     for(let i = 0; i < cellList.length; i++){
         if(!cellList[i].classList.contains("mine")){
             let minesAround = 0;
-            let cellsAround = GetListCellsAround(i);
+            let cellsAround = GetListCellsAround(i, rows, columns);
             for(let j=0; j<cellsAround.length; j++){
                 if(cellList[cellsAround[j]].classList.contains("mine")){
                     minesAround++;
@@ -222,18 +238,58 @@ const SetClasesIntoCells = (cellList) => {
 // FUNCTIONALITIES OF THE MINESWEEPER - RESET MAP
 // ==============================================================
 
-const NewFieldGenerator = () => {
+const NewFieldGenerator = (difficulty) => {
     const field = document.getElementById("field");
 
-    CreateBoard(field);
+    let minesToPlace;
+    let rows;
+    let columns;
 
-    let minesToPlace = 99;
+    switch (difficulty){
+        case "Easy":
+            minesToPlace = 10;
+            rows = 8;
+            columns = 10;
+            break;
+        
+        case "Normal":
+            minesToPlace = 40;
+            rows = 14;
+            columns = 18;
+            break;
+        
+        case "Hard":
+            minesToPlace = 99;
+            rows = 20;
+            columns = 24;
+            break;
+    }
+
+    CreateBoard(field, rows, columns);
+
     const cells = document.getElementsByClassName("cell");
     zeroCellsChecked = [];
 
-    SetMinesIntoField(minesToPlace, cells)
-    SetClasesIntoCells(cells);
+    SetMinesIntoField(minesToPlace, cells, rows*columns)
+    SetClasesIntoCells(cells, rows, columns);
     SetClickerEventsIntoCells(cells);
+    document.getElementById("flagsCounter").innerHTML = minesToPlace;
+}
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - CHANGE DIFFICULTY
+// ==============================================================
+
+const ChangeDifficulty = (difficulty) => {
+    const field = document.getElementById("field");
+    field.removeChild(document.getElementById("tableField"));
+
+    document.getElementById("lostWinTitle").innerHTML = '';
+    document.getElementById("flagsCounter").innerHTML = 99;
+
+    NewFieldGenerator(difficulty);
+    StopTimer();
+    StartTimer();
 }
 
 // ==============================================================
@@ -297,7 +353,7 @@ resetButton.addEventListener("click", (e) => {
     document.getElementById("lostWinTitle").innerHTML = '';
     document.getElementById("flagsCounter").innerHTML = 99;
 
-    NewFieldGenerator();
+    NewFieldGenerator("Hard");
     StartTimer();
 })
 
@@ -327,5 +383,5 @@ const UpdateTimer = () => {
 // ==============================================================
 
 let zeroCellsChecked = [];
-NewFieldGenerator();
+NewFieldGenerator("Hard");
 StartTimer();
