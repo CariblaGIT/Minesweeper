@@ -294,8 +294,8 @@ resetButton.addEventListener("click", (e) => {
     field.removeChild(document.getElementById("tableField"));
     const divReset = document.getElementById("restartGame");
     divReset.style.display = "none";
-    const lostWinGameTitle = document.getElementById("lostWinTitle");
-    lostWinGameTitle.innerHTML = ''
+    document.getElementById("lostWinTitle").innerHTML = '';
+    document.getElementById("flagsCounter").innerHTML = 99;
 
     NewFieldGenerator();
     StartTimer();
