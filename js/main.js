@@ -104,6 +104,8 @@ const LostGame = (mineClickedID, arrayCells) => {
             // Block click events
             document.addEventListener('mousedown', blockClicks, true);
             setTimeout(() => {
+                const mineAudioPlayer = document.getElementById("audioBombs");
+                mineAudioPlayer.play();
                 ShowMineIcon(listMines[randomPos]);
                 listMines.splice(randomPos, 1);
                 showNextMine(); // Call the function recursively for the next mine
@@ -143,6 +145,7 @@ const CheckWinGame = () => {
         }
     }
     if(counterCellsFliped == 380){
+        StopTimer();
         const winGameTitle = document.getElementById("lostWinTitle");
         winGameTitle.innerHTML = '<img src="./img/win.png">'
         const divReset = document.getElementById("restartGame");
@@ -252,6 +255,7 @@ const SetClickerEventsIntoCells = (cellList) => {
                         }
                         switch(numMines){
                             case "mine":
+                                StopTimer();
                                 LostGame(e.target.id, arrayCells);
                                 break;
                             default:
@@ -265,10 +269,13 @@ const SetClickerEventsIntoCells = (cellList) => {
                     }
                     break;
                 case 2:
-                    if(!e.target.innerHTML){
+                    let flagCounter = parseInt(document.getElementById("flagsCounter").innerHTML);
+                    if(!e.target.innerHTML && flagCounter > 0){
                         e.target.innerHTML='<i class="bi bi-flag-fill"></i>';
-                    } else {
+                        document.getElementById("flagsCounter").innerHTML = (flagCounter - 1).toString();
+                    } else if(e.target.innerHTML){
                         e.target.innerHTML='';
+                        document.getElementById("flagsCounter").innerHTML = (flagCounter + 1).toString();
                     }
                     break;
             }
@@ -291,7 +298,29 @@ resetButton.addEventListener("click", (e) => {
     lostWinGameTitle.innerHTML = ''
 
     NewFieldGenerator();
+    StartTimer();
 })
+
+// ==============================================================
+// FUNCTIONALITIES OF THE MINESWEEPER - TIMER
+// ==============================================================
+
+let timer;
+
+const StartTimer = () => {
+    document.getElementById("timerTime").innerHTML = 0;
+    timer = setInterval(UpdateTimer, 1000);
+}
+
+const StopTimer = () => {
+    clearInterval(timer);
+}
+
+const UpdateTimer = () => {
+    const timerValue = document.getElementById("timerTime");
+    let time = parseInt(timerValue.innerHTML);
+    timerValue.innerHTML = (time+1).toString()
+}
 
 // ==============================================================
 // FUNCTIONALITIES OF THE MINESWEEPER - MAIN
@@ -299,3 +328,4 @@ resetButton.addEventListener("click", (e) => {
 
 let zeroCellsChecked = [];
 NewFieldGenerator();
+StartTimer();

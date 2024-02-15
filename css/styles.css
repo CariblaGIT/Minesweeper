@@ -28,6 +28,7 @@ body{
     position: absolute;
 }
 
+/* Screen pop up when you win or loose to restart the game */
 #restartGame{
     height: 100vh;
     width: 100vw;
@@ -42,6 +43,7 @@ body{
     background-color: rgba(87, 86, 86, 0.601);
 }
 
+/* Restart button style, interactions and icon */
 #buttonRestart{
     height: 5em;
     width: 10em;
@@ -75,6 +77,23 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+/* Logo header field */
+#logoImgHeader{
+    height: auto;
+}
+
+/* Header sections for the timer and the flag put counter inside the field */
+#timerSection, #flagsSection{
+    height: 10vh;
+    width: 20vw;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    color: white;
+    font-size: xx-large;
 }
 
 /* Field container and field generated on JS */
@@ -131,6 +150,7 @@ body{
     cursor: pointer;
 }
 
+/* Classes for making checkboard appearance - Selected */
 .clickedCellGreen{
     background-color: #D7B899;
     cursor: pointer;
@@ -141,6 +161,7 @@ body{
     cursor: pointer;
 }
 
+/* Generic Bootstrap class for icons */
 .bi{
     height: 1.5em;
     width: 1.5em;
@@ -150,14 +171,17 @@ body{
     pointer-events: none;
 }
 
+/* Specific class for the mines on field */
 .bi-crosshair{
     color:black;
 }
 
+/* Specific class for the flags on field */
 .bi-flag-fill{
     color: white;
 }
 
+/* Classes for all numbers on field to know the mines around that cell (different color for each num) */
 .minesAround1{
     color: blue;
 }
