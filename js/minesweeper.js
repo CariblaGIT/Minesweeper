@@ -8,17 +8,26 @@ const GameManager = {
             difficulty: "Easy",
             minesToPlace : 10,
             rows : 8,
-            columns : 10
+            columns : 10,
+            heightSizeRow : "8.75vh",
+            widthSizeCell : "6vw",
+            heightSizeCell : "8.75vh"
         }, {
             difficulty: "Normal",
             minesToPlace : 40,
             rows : 14,
-            columns : 18
+            columns : 18,
+            heightSizeRow : "5vh",
+            widthSizeCell : "4.6vw",
+            heightSizeCell : "5vh"
         }, {
             difficulty: "Hard",
             minesToPlace : 99,
             rows : 20,
-            columns : 24
+            columns : 24,
+            heightSizeRow : "3.5vh",
+            widthSizeCell : "2.5vw",
+            heightSizeCell : "3.5vh"
         }
     ],
     zeroCellsChecked : [],
@@ -77,6 +86,7 @@ const CreateBoard = (field, rows, columns) => {
     for (let i = 0; i < rows; i++) { 
         let row = document.createElement('div'); 
         row.setAttribute('id', 'tableRow');
+        row.setAttribute('class', 'rowField');
 
         for (let j = 0; j < columns; j++) { 
             // Create a cell 
@@ -356,6 +366,7 @@ resetButton.addEventListener("click", (e) => {
     document.getElementById("flagsCounter").innerHTML = difficultyData.minesToPlace;
 
     NewFieldGenerator(GameManager.actualDifficulty);
+    ChangeSizeBoard(GameManager.actualDifficulty);
     StartTimer();
 })
 
@@ -374,8 +385,34 @@ const ChangeDifficulty = (difficulty) => {
     document.getElementById("flagsCounter").innerHTML = difficultyData.minesToPlace;
 
     NewFieldGenerator(difficulty);
+    ChangeSizeBoard(difficulty);
     StopTimer();
     StartTimer();
+}
+
+// ==============================================================
+// ESTETIC FUNCTION - RESIZE BOARD DYNAMICALLY
+// ==============================================================
+
+const ChangeSizeBoard = (difficulty) => {
+    const cells = document.getElementsByClassName("cell");
+    const arrayCells = Array.from(cells);
+    const rows = document.getElementsByClassName("rowField");
+    const arrayRows = Array.from(rows);
+    const difficultyData = GameManager.gameDifficulties.find(level => level.difficulty === difficulty)
+
+    let heightSizeRow = difficultyData.heightSizeRow;
+    let widthSizeCell = difficultyData.widthSizeCell;
+    let heightSizeCell = difficultyData.heightSizeCell;
+
+    arrayRows.forEach(item => {
+        item.style.height = heightSizeRow;
+    })
+
+    arrayCells.forEach(item => {
+        item.style.height = heightSizeCell;
+        item.style.width = widthSizeCell;
+    })
 }
 
 // ==============================================================
