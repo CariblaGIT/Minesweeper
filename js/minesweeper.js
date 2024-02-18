@@ -302,16 +302,16 @@ let GetListCellsAround = (index, rows, columns) => {
     } else if (index == columns-1){
         cellsAround = [index-1, index+columns-1, index+columns];
     } else if (index == rows*columns-columns){
-        cellsAround = [index-columns, index-columns-1, index+1];
+        cellsAround = [index-columns, index-columns+1, index+1];
     } else if (index == rows*columns-1){
         cellsAround = [index-columns-1, index-columns, index-1];
     } else if (index > 0 && index < columns-1){
         cellsAround = [index-1, index+1, index+columns-1, index+columns, index+columns+1];
     } else if (index > rows*columns-columns && index < rows*columns-1){
         cellsAround = [index-columns-1, index-columns, index-columns+1, index-1, index+1];
-    } else if (index > 0 && index % columns == 0 && index < rows*columns-columns){
+    } else if (index % columns == 0){
         cellsAround = [index-columns, index-columns+1, index+1, index+columns, index+columns+1];
-    } else if (index > columns-1 && index % columns == columns-1 && index < rows*columns-1){
+    } else if (index % columns == columns - 1){
         cellsAround = [index-columns-1, index-columns, index-1, index+columns-1, index+columns];
     } else {
         cellsAround = [index-columns-1, index-columns, index-columns+1, index-1, index+1, index+columns-1, index+columns, index+columns+1];
