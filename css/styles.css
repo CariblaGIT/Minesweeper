@@ -89,6 +89,15 @@ body{
     align-items: center;
 }
 
+.dropdown-menu-center{
+    left: -30% !important;
+    text-align: center;
+}
+
+.dropdown-menu-center > li{
+    cursor: pointer;
+}
+
 /* Logo header field */
 #logoImgHeader{
     height: auto;
