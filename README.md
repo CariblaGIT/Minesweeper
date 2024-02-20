@@ -52,7 +52,7 @@ You can try the [demo](https://cariblagit.github.io/Minesweeper/) the latest ver
 <br>
 ✅ Timer and flags counter implementation
 <br>
-⬜ Pallette selector for changing default colors
+⬜ Highscore save for each difficulty
 
 ## Views
 
